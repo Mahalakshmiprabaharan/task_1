@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZenTasks</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-size: 400% 400%;
+            animation: gradientBG 8s ease infinite;
+            transition: background 0.5s;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            transition: background 0.5s, color 0.5s;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            animation: fadeInTitle 2s ease-in-out;
+        }
+
+        @keyframes fadeInTitle {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        input, select {
+            width: calc(100% - 20px);
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #87cefa;
+            border-radius: 10px;
+            font-size: 1em;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #87cefa;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #70b5f9;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        li {
+            background-color: #e6f7ff;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #333;
+        }
+
+        .priority-high { background-color: #ffd5d5; }
+        .priority-medium { background-color: #ffedc2; }
+        .priority-low { background-color: #d8ffd9; }
+
+        .dark-mode {
+            background: #121212;
+            color: #f0f0f0;
+        }
+
+        .dark-mode .container {
+            background: #1e1e1e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ZenTasks</h1>
+        <input type="text" id="taskInput" placeholder="Add a mindful task...">
+        <select id="prioritySelect">
+            <option value="high">High Priority</option>
+            <option value="medium">Medium Priority</option>
+            <option value="low">Low Priority</option>
+        </select>
+        <button onclick="addTask()">Add Task</button>
+        <button onclick="clearAllTasks()">Clear All Tasks</button>
+        <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+        <ul id="taskList"></ul>
+        <p id="taskCount">Tasks remaining: 0</p>
+    </div>
+
+    <script>
+        const taskList = document.getElementById('taskList');
+        const taskCount = document.getElementById('taskCount');
+        let darkMode = false;
+
+        function addTask() {
+            const taskInput = document.getElementById('taskInput');
+            const prioritySelect = document.getElementById('prioritySelect');
+            const taskText = taskInput.value.trim();
+            const priority = prioritySelect.value;
+
+            if (taskText === '') {
+                alert('Please enter a task.');
+                return;
+            }
+
+            const li = document.createElement('li');
+            li.className = priority-${priority};
+            li.innerHTML = `
+                <span contenteditable="true">${taskText}</span>
+                <span>
+                    <button onclick="completeTask(this)">✔</button>
+                    <button onclick="deleteTask(this)">❌</button>
+                </span>
+            `;
+
+            taskList.appendChild(li);
+            taskInput.value = '';
+            updateTaskCount();
+        }
+
+        function completeTask(button) {
+            const li = button.parentElement.parentElement;
+            li.classList.toggle('completed');
+            updateTaskCount();
+        }
+
+        function deleteTask(button) {
+            const li = button.parentElement.parentElement;
+            taskList.removeChild(li);
+            updateTaskCount();
+        }
+
+        function clearAllTasks() {
+            taskList.innerHTML = '';
+            updateTaskCount();
+        }
+
+        function toggleDarkMode() {
+            darkMode = !darkMode;
+            document.body.classList.toggle('dark-mode', darkMode);
+        }
+
+        function updateTaskCount() {
+            const remainingTasks = document.querySelectorAll('li:not(.completed)').length;
+            taskCount.textContent = Tasks remaining: ${remainingTasks};
+        }
+    </script>
+</body>
+</html>
